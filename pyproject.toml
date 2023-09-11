@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "ddyum"
+version = "0.1.0"
+description = ""
+authors = ["RG1ee <niwows@yandex.ru>"]
+readme = "README.md"
+packages = [
+  {include = "src"}
+]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+ignore = ["F401", "F403", "F405"]
+exclude = [
+    "migrations",
+    ".direnv",
+    ".git",
+    ".mypy_cache",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    "venv",
+    "__pypackages__",
+    "dist",
+    "node_modules",
+]
+line-length = 120
