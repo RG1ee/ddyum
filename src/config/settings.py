@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     POSTGRES_DSN: PostgresDsn = Field(
         default="postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/postgres",
     )
+    BROKER_URL: str = Field(default="redis://localhost:6379/0")
     model_config = SettingsConfigDict(
         env_file=".env",
         env_prefix="APP_",
