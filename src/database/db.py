@@ -6,7 +6,7 @@ from src.config.settings import settings
 
 
 engine = create_async_engine(f"{settings.POSTGRES_DSN}")
-async_session = async_sessionmaker(engine, autoflush=False)
+async_session = async_sessionmaker(engine, autoflush=False, expire_on_commit=False)
 
 
 class Base(DeclarativeBase):
