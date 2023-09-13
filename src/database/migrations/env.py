@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from alembic import context
 
 from src.config.settings import settings
-from src.config.db import Base
+from src.database import Base
 
 
 config = context.config
@@ -14,7 +14,7 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-config.set_main_option("sqlalchemy.url", str(settings.POSTGRES_DSN))
+config.set_main_option("sqlalchemy.url", f"{settings.POSTGRES_DSN}?async_fallback=True")
 
 target_metadata = Base.metadata
 
