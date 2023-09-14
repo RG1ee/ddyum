@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr
 
 
 class UserBaseSchema(BaseModel):
@@ -6,8 +6,3 @@ class UserBaseSchema(BaseModel):
     telegram: str
     phone: str
     is_acive: bool
-
-
-class UserRegistrationSchema(BaseModel):
-    email: EmailStr
-    password: str = Field(..., min_length=8)
