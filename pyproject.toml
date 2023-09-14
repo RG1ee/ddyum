@@ -29,6 +29,9 @@ python-jose = "^3.3.0"
 pre-commit = "^3.4.0"
 ruff = "^0.0.287"
 black = "^23.9.1"
+pytest = "^7.4.2"
+aiosqlite = "^0.19.0"
+pytest-asyncio = "^0.21.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -50,3 +53,8 @@ exclude = [
     "node_modules",
 ]
 line-length = 120
+
+[tool.pytest.ini_options]
+python_path = "src"
+asyncio_mode = "auto"
+python_files = ["*_test.py", "test_*.py", "*_tests.py"]
