@@ -8,7 +8,7 @@ from src.config.settings import settings
 
 if settings.MODE == "TEST":
     DATABASE_URL = settings.TEST_DATABASE
-    # DATABASE_PARAMS = {"poolclass": NullPool}
+    DATABASE_PARAMS = {"poolclass": NullPool}
 else:
     DATABASE_URL = str(settings.POSTGRES_DSN)
 
