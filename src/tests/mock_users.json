@@ -1,0 +1,9 @@
+[
+  {
+    "email": "test@test.com",
+    "hashed_password": "$2b$12$OVrXauUXvsRsNSeF/gok6OySZ4vMypn.RjNCKei4bKDShyLBYyKfm",
+    "is_active": true,
+    "phone": "88003333333",
+    "telegram": "test"
+  }
+]
