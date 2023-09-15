@@ -63,7 +63,7 @@ async def refresh(response: Response, payload: AuthUserRefreshSchema):
     return dict(message="Successful refresh")
 
 
-@router.post(
+@router.get(
     path="/logout",
     status_code=status.HTTP_200_OK,
 )
