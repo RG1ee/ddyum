@@ -15,7 +15,7 @@ class Settings(BaseSettings):
         default="postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/postgres",
     )
     TEST_DATABASE: str = Field(
-        default=f"sqlite+aiosqlite:///db.sqlite3",
+        default="sqlite+aiosqlite:///db.sqlite3",
     )
     BROKER_URL: str = Field(default="redis://localhost:6379/0")
     ACCESS_EXPIRE: int = Field(default=10)
