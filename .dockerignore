@@ -1,0 +1,11 @@
+**/.git
+**/.gitignore
+**/.vscode
+README.md
+db.sqlite3
+web.Dockerfile
+README.md
+docker-compose.yaml
+.pytest_cache
+.ruff_cache
+.pre-commit-config.yaml

@@ -3,7 +3,6 @@ name = "ddyum"
 version = "0.1.0"
 description = ""
 authors = ["RG1ee <niwows@yandex.ru>"]
-readme = "README.md"
 packages = [
   {include = "src"}
 ]
