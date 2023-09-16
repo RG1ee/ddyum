@@ -1,7 +1,9 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import EmailStr
+
+from src.base.schemas import BaseConfigSchema
 
 
-class UserBaseSchema(BaseModel):
+class UserBaseSchema(BaseConfigSchema):
     email: EmailStr
     telegram: str
     phone: str
