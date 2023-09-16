@@ -19,5 +19,22 @@ services:
     ports:
       - ${REDIS_PORT-6397}:6397
 
+  app:
+    container_name: app
+    restart: always
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+      target: development
+    volumes:
+      - ./app:/app
+    env_file: .env
+    ports:
+      - ${SERVER_PORT-8000}:${EXTERNAL_PORT-8000}
+    entrypoint: ["/code/entrypoint.sh"]
+    depends_on:
+      - db
+      - redis
+
 volumes:
   postgres_data:
