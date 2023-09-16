@@ -48,7 +48,7 @@ COPY --from=builder-base $POETRY_HOME $POETRY_HOME
 
 ADD . .
 
-RUN poetry install --with dev
+RUN poetry install --without dev
 RUN groupadd -r fastapi && useradd -r -u 999 -g fastapi fastapi
 
 RUN chmod +x /code/entrypoint.sh
