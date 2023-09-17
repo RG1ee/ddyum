@@ -12,6 +12,7 @@ from src.auth.utils import (
     create_hash_password,
 )
 from src.users.services import UserService
+from src.auth.tasks.tasks import send_user_verification_email
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -30,6 +31,8 @@ async def registration_user(payload: AuthUserRegistrationSchema) -> dict:
         email=payload.email,
         hashed_password=hashed_password,
     )
+
+    send_user_verification_email.delay(payload.email)
 
     return dict(email=payload.email)
 
