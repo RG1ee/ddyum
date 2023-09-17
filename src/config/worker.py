@@ -6,5 +6,8 @@ from src.config.settings import settings
 celery = Celery(
     "worker",
     broker=settings.BROKER_URL,
-    include=["src.tasks.tasks"],
+)
+
+celery.autodiscover_tasks(
+    ["src.auth.tasks"],
 )
