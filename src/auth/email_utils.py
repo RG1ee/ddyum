@@ -14,7 +14,7 @@ def preparing_for_email(
     msg["Subject"] = subject
     msg["From"] = by
     msg["To"] = to
-    text = f"{settings.BASE_URL}/auth/confirm/{create_token(dict(sub=to), 60 * 60)}"
+    text = f"{settings.BASE_URL}/auth/confirm/{create_token(dict(sub=to), settings.EMAIL_TOKEN_EXPIRE)}"
     part = MIMEText(text, "plain")
     msg.attach(part)
 
