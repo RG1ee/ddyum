@@ -1,18 +1,18 @@
-from fastapi import APIRouter, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 
 from src.auth.schemas import (
-    AuthUserRefreshSchema,
     AuthUserSchema,
     AuthUserRegistrationSchema,
 )
 from src.auth.utils import (
     authenticate_user,
-    decode_token,
     set_token,
     create_hash_password,
 )
-from src.users.services import UserService
+from src.auth.dependencies import current_user_for_refresh
 from src.auth.tasks.tasks import send_user_verification_email
+from src.users.models import User
+from src.users.services import UserService
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -46,7 +46,7 @@ async def login_user(response: Response, payload: AuthUserSchema):
     if not user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
-    set_token(response, dict(sub=str(user.id)))
+    await set_token(response, dict(sub=str(user.id)))
 
     return dict(message="Successful login")
 
@@ -55,13 +55,11 @@ async def login_user(response: Response, payload: AuthUserSchema):
     path="/refresh",
     status_code=status.HTTP_200_OK,
 )
-async def refresh(response: Response, payload: AuthUserRefreshSchema):
-    user = await UserService.get_one_or_none(id=decode_token(payload.refresh_token))
-    if not user:
-        response.delete_cookie("refresh_token")
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
-
-    set_token(response, dict(sub=str(user.id)))
+async def refresh(
+    response: Response,
+    current_user_for_refresh: User = Depends(current_user_for_refresh),
+):
+    await set_token(response, dict(sub=str(current_user_for_refresh.id)))
 
     return dict(message="Successful refresh")
 
