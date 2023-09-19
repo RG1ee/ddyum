@@ -62,7 +62,7 @@ async def test_confirm_email(
     assert response.status_code == 200
 
     user = await UserService.get_one_or_none(email=response.json())
-    assert user.is_active == True
+    assert user.is_active is True
 
 
 async def test_logout_user(authenticated_client: AsyncClient):
