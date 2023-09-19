@@ -1,6 +1,8 @@
 import pytest
 from httpx import AsyncClient
 
+from users.services import UserService
+
 
 @pytest.mark.parametrize(
     "email, password, status_code",
@@ -48,6 +50,19 @@ async def test_login_user(
 
     assert ("access_token" in client.cookies) is token
     assert ("refresh_token" in client.cookies) is token
+
+
+async def test_confirm_email(
+    not_active_client: AsyncClient,
+):
+    response = await not_active_client.get(
+        f"auth/confirm/{not_active_client.cookies['access_token']}",
+    )
+
+    assert response.status_code == 200
+
+    user = await UserService.get_one_or_none(email=response.json())
+    assert user.is_active == True
 
 
 async def test_logout_user(authenticated_client: AsyncClient):
