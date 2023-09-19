@@ -6,6 +6,8 @@ from src.auth.schemas import (
 )
 from src.auth.utils import (
     authenticate_user,
+    check_token,
+    decode_token,
     set_token,
     create_hash_password,
 )
@@ -46,9 +48,24 @@ async def login_user(response: Response, payload: AuthUserSchema):
     if not user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
-    await set_token(response, dict(sub=str(user.id)))
+    await set_token(response, dict(sub=user.email))
 
     return dict(message="Successful login")
+
+
+@router.get(
+    path="/confirm/{access_token}",
+    status_code=status.HTTP_200_OK,
+)
+async def confirm_user_email(access_token: str):
+    sub = decode_token(access_token)
+    user = await check_token(sub)
+
+    if not user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+
+    await UserService.update_user(user_id=user.id, is_active=True)
+    return user.email
 
 
 @router.post(
@@ -59,7 +76,7 @@ async def refresh(
     response: Response,
     current_user_for_refresh: User = Depends(current_user_for_refresh),
 ):
-    await set_token(response, dict(sub=str(current_user_for_refresh.id)))
+    await set_token(response, dict(sub=current_user_for_refresh.email))
 
     return dict(message="Successful refresh")
 
