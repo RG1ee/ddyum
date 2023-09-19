@@ -60,3 +60,18 @@ async def authenticated_client():
         assert client.cookies["refresh_token"]
 
         yield client
+
+
+@pytest.fixture(scope="function")
+async def not_active_client():
+    async with AsyncClient(app=fastapi_app, base_url="http://test") as client:
+        data = {
+            "email": "testuser@test.com",
+            "password": "testpassword",
+        }
+        await client.post("auth/login", json=data)
+
+        assert client.cookies["access_token"]
+        assert client.cookies["refresh_token"]
+
+        yield client

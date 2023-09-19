@@ -69,7 +69,7 @@ async def check_token(payload: dict[str, Any]):
     if not user_id:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
-    user = await UserService.get_one_or_none(id=int(user_id))
+    user = await UserService.get_one_or_none(email=user_id)
     if not user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 

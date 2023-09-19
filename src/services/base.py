@@ -1,4 +1,5 @@
 from sqlalchemy import insert, select
+
 from src.database.db import async_session
 
 
