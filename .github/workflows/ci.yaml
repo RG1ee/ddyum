@@ -24,4 +24,4 @@ jobs:
         run: poetry run ruff check .
 
       - name: Run Test
-        run: pytest -vv
+        run: poetry run pytest -vv
