@@ -4,7 +4,7 @@ from src.base.schemas import BaseConfigSchema
 
 
 class UserBaseSchema(BaseConfigSchema):
+    id: int
     email: EmailStr
-    telegram: str
-    phone: str
-    is_acive: bool
+    telegram: str | None
+    phone: str | None
