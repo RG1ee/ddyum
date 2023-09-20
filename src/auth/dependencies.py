@@ -1,13 +1,14 @@
 from fastapi import Depends, HTTPException, Request, status
 
 from src.auth.utils import check_token, decode_token
+from src.exceptions.http_exceptions import http_exc_401_unauthorized
 
 
 def get_token(request: Request):
     access_token = request.cookies.get("access_token")
     refresh_token = request.cookies.get("refresh_token")
     if not access_token or not refresh_token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        raise http_exc_401_unauthorized
     return access_token, refresh_token
 
 

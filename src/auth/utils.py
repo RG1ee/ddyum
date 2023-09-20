@@ -7,6 +7,7 @@ from jose import JWTError, jwt
 
 from src.config.settings import settings
 from src.users.services import UserService
+from src.exceptions.http_exceptions import http_exc_401_unauthorized
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -42,7 +43,7 @@ def decode_token(token: str) -> dict[str, Any]:
         return decode_jwt
 
     except JWTError:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        raise http_exc_401_unauthorized
 
 
 async def authenticate_user(email: str, password: str):
@@ -63,14 +64,14 @@ async def set_token(response: Response, sub: dict):
 async def check_token(payload: dict[str, Any]):
     expire: str | None = payload.get("exp")
     if (not expire) or (int(expire) < datetime.utcnow().timestamp()):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        raise http_exc_401_unauthorized
 
     user_id: str | None = payload.get("sub")
     if not user_id:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+        raise http_exc_401_unauthorized
 
     user = await UserService.get_one_or_none(email=user_id)
     if not user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise http_exc_401_unauthorized
 
     return user
