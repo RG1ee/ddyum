@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Any
 
-from fastapi import HTTPException, Response, status
+from fastapi import Response
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 
