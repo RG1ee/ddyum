@@ -47,7 +47,7 @@ async def client():
         yield client
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 async def authenticated_client():
     async with AsyncClient(app=fastapi_app, base_url="http://test") as client:
         data = {

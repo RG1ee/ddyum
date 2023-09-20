@@ -7,4 +7,8 @@ def to_camel(string: str) -> str:
 
 
 class BaseConfigSchema(BaseModel):
-    model_config = ConfigDict(populate_by_name=True, alias_generator=to_camel)
+    model_config = ConfigDict(
+        populate_by_name=True,
+        alias_generator=to_camel,
+        from_attributes=True,
+    )
