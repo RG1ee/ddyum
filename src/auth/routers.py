@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, Response, status
 
 from src.auth.schemas import (
     AuthUserSchema,
@@ -15,6 +15,11 @@ from src.auth.dependencies import current_user_for_refresh
 from src.auth.tasks.tasks import send_user_verification_email
 from src.users.models import User
 from src.users.services import UserService
+from src.exceptions.http_exceptions import (
+    http_exc_400_bad_email,
+    http_exc_400_bad_data,
+    http_exc_401_unauthorized,
+)
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -27,7 +32,7 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 async def registration_user(payload: AuthUserRegistrationSchema) -> dict:
     existing_user = await UserService.get_one_or_none(email=payload.email)
     if existing_user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise http_exc_400_bad_email
     hashed_password = create_hash_password(payload.password)
     await UserService.insert_data(
         email=payload.email,
@@ -46,7 +51,7 @@ async def registration_user(payload: AuthUserRegistrationSchema) -> dict:
 async def login_user(response: Response, payload: AuthUserSchema):
     user = await authenticate_user(email=payload.email, password=payload.password)
     if not user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise http_exc_400_bad_data
 
     await set_token(response, dict(sub=user.email))
 
@@ -62,7 +67,7 @@ async def confirm_user_email(access_token: str):
     user = await check_token(sub)
 
     if not user:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        raise http_exc_401_unauthorized
 
     await UserService.update_user(user_id=user.id, is_active=True)
     return user.email
