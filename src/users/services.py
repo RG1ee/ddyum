@@ -1,7 +1,7 @@
 from sqlalchemy import update
 
 from src.users.models import User
-from src.services.base import BaseService
+from src.base.services import BaseService
 from src.database.db import async_session
 
 

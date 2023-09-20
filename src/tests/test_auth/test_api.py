@@ -1,7 +1,8 @@
 import pytest
 from httpx import AsyncClient
 
-from users.services import UserService
+from src.users.services import UserService
+from src.config.settings import settings
 
 
 @pytest.mark.parametrize(
@@ -18,7 +19,8 @@ async def test_register_user(
     client: AsyncClient,
 ):
     response = await client.post(
-        "auth/register", json={"email": email, "password": password}
+        f"{settings.API_PREFIX}/auth/register",
+        json={"email": email, "password": password},
     )
 
     assert response.status_code == status_code
@@ -39,7 +41,7 @@ async def test_login_user(
     token: bool,
 ):
     response = await client.post(
-        "auth/login",
+        f"{settings.API_PREFIX}/auth/login",
         json={
             "email": email,
             "password": password,
@@ -56,7 +58,7 @@ async def test_confirm_email(
     not_active_client: AsyncClient,
 ):
     response = await not_active_client.get(
-        f"auth/confirm/{not_active_client.cookies['access_token']}",
+        f"{settings.API_PREFIX}/auth/confirm/{not_active_client.cookies['access_token']}",
     )
 
     assert response.status_code == 200
@@ -66,7 +68,7 @@ async def test_confirm_email(
 
 
 async def test_logout_user(authenticated_client: AsyncClient):
-    response = await authenticated_client.get("auth/logout")
+    response = await authenticated_client.get(f"{settings.API_PREFIX}/auth/logout")
 
     assert response.status_code == 200
 

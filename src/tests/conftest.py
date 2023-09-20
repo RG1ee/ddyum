@@ -54,7 +54,7 @@ async def authenticated_client():
             "email": "test@test.com",
             "password": "testpassword",
         }
-        await client.post("auth/login", json=data)
+        await client.post(f"{settings.API_PREFIX}/auth/login", json=data)
 
         assert client.cookies["access_token"]
         assert client.cookies["refresh_token"]
@@ -69,7 +69,7 @@ async def not_active_client():
             "email": "testuser@test.com",
             "password": "testpassword",
         }
-        await client.post("auth/login", json=data)
+        await client.post(f"{settings.API_PREFIX}/auth/login", json=data)
 
         assert client.cookies["access_token"]
         assert client.cookies["refresh_token"]

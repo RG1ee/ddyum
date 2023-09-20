@@ -11,6 +11,7 @@ BASE_DIR = Path(__file__).parent.parent
 
 class Settings(BaseSettings):
     MODE: Literal["TEST", "DEV", "PROD"] = Field(default="DEV")
+    API_PREFIX: str = Field(default="/api/v1")
     POSTGRES_DSN: PostgresDsn = Field(
         default="postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/postgres",
     )
