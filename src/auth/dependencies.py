@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, Request, status
+from fastapi import Depends, Request
 
 from src.auth.utils import check_token, decode_token
 from src.exceptions.http_exceptions import http_exc_401_unauthorized

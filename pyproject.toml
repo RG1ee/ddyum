@@ -39,7 +39,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.ruff]
-ignore = ["F401", "F403", "F405"]
+ignore = ["F403", "F405"]
 exclude = [
     "migrations",
     ".direnv",

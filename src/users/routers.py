@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status
 
 from src.users.schemas import UserBaseSchema
 from src.auth.dependencies import current_user
