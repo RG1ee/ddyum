@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     EMAIL_TOKEN_EXPIRE: int = Field(default=120)
     SECRET_KEY: str = Field(default="secret")
     ALGORITHM: str = Field(default="HS256")
-    BASE_URL: str = Field(default="http://127.0.0.1:8000/")
+    BASE_URL: str = Field(default="http://127.0.0.1:8000")
 
     # Smtp server
     SMTP_SERVER: str = Field(default="smtp.example.com")
