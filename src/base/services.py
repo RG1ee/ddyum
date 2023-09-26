@@ -19,3 +19,12 @@ class BaseService:
             stmt = insert(cls.model).values(**data)
             await session.execute(stmt)
             await session.commit()
+
+    @classmethod
+    async def insert_data_returning_id(cls, **data):
+        async with async_session() as session:
+            stmt = insert(cls.model).values(**data).returning(cls.model.id)
+            returning_id = await session.execute(stmt)
+            await session.commit()
+
+            return returning_id.scalars().one()
