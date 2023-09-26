@@ -1,6 +1,6 @@
 from sqlalchemy import update
 
-from src.users.models import User
+from src.users.models import Profile, User
 from src.base.services import BaseService
 from src.database.db import async_session
 
@@ -14,3 +14,7 @@ class UserService(BaseService):
             stmt = update(cls.model).filter_by(id=user_id).values(**data)
             await session.execute(stmt)
             await session.commit()
+
+
+class ProfileService(BaseService):
+    model = Profile

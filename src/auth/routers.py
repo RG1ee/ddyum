@@ -14,7 +14,7 @@ from src.auth.utils import (
 from src.auth.dependencies import current_user_for_refresh
 from src.auth.tasks.tasks import send_user_verification_email
 from src.users.models import User
-from src.users.services import UserService
+from src.users.services import ProfileService, UserService
 from src.exceptions.http_exceptions import (
     http_exc_400_bad_email,
     http_exc_400_bad_data,
@@ -34,10 +34,11 @@ async def registration_user(payload: AuthUserRegistrationSchema) -> dict:
     if existing_user:
         raise http_exc_400_bad_email
     hashed_password = create_hash_password(payload.password)
-    await UserService.insert_data(
+    new_user_id = await UserService.insert_data_returning_id(
         email=payload.email,
         hashed_password=hashed_password,
     )
+    await ProfileService.insert_data(user_id=new_user_id)
 
     send_user_verification_email.delay(payload.email)
 
