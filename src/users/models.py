@@ -15,7 +15,7 @@ class User(Base):
 
     profile: Mapped["Profile"] = relationship(
         uselist=False,
-        backref="profile",
+        back_populates="user",
     )
 
     def __str__(self) -> str:
@@ -34,7 +34,7 @@ class Profile(Base):
     telegram: Mapped[str | None]
     phone: Mapped[str | None]
 
-    user_profile: Mapped["User"] = relationship(backref="user")
+    user: Mapped["User"] = relationship(back_populates="profile")
 
     def __str__(self) -> str:
         return f"{__class__.__name__} {self.telegram!r}"

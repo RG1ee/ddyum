@@ -8,3 +8,11 @@ class UserBaseSchema(BaseConfigSchema):
     email: EmailStr
     telegram: str | None
     phone: str | None
+
+
+class ProfileSchema(BaseConfigSchema):
+    id: int
+    email: EmailStr
+    first_name: str | None
+    telegram: str | None
+    phone: str | None

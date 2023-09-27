@@ -9,7 +9,7 @@ from sqlalchemy import insert
 from src.database.db import Base, engine, async_session
 from src.main import app as fastapi_app
 from src.config.settings import settings
-from src.users.models import User
+from src.users.models import Profile, User
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -25,11 +25,15 @@ async def prepare_database():
             return json.load(file)
 
     users = open_mock_json("users")
+    profile = open_mock_json("profile")
 
     async with async_session() as session:
         add_users = insert(User).values(users)
+        add_profile = insert(Profile).values(profile)
 
         await session.execute(add_users)
+        await session.execute(add_profile)
+
         await session.commit()
 
 
