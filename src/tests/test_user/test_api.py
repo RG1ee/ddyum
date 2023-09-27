@@ -33,3 +33,47 @@ async def test_get_user_profile(
 
     response = await client.get(f"{settings.API_PREFIX}/users/my_profile")
     assert response.status_code == 401
+
+
+@pytest.mark.parametrize(
+    "first_name, telegram, phone",
+    [
+        ("Monika", "monika123", "8932121155"),
+    ],
+)
+async def test_update_profile(
+    authenticated_client: AsyncClient,
+    client: AsyncClient,
+    first_name: str,
+    telegram: str,
+    phone: str,
+):
+    data = {
+        "firstName": first_name,
+        "telegram": telegram,
+        "phone": phone,
+    }
+
+    # test patch update user profile
+    response = await authenticated_client.patch(
+        f"{settings.API_PREFIX}/users/my_profile/update", json=data
+    )
+
+    assert response.status_code == 200
+    assert response.json() == data
+
+    # test of an un-authenticated user
+    response = await client.patch(
+        f"{settings.API_PREFIX}/users/my_profile/update", json=data
+    )
+
+    assert response.status_code == 401
+
+    # test partial update
+    data.pop("phone")
+    response = await authenticated_client.patch(
+        f"{settings.API_PREFIX}/users/my_profile/update", json=data
+    )
+
+    assert response.status_code == 200
+    assert response.json() == data

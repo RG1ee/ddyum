@@ -38,3 +38,17 @@ class UserService(BaseService):
 
 class ProfileService(BaseService):
     model = Profile
+
+    @classmethod
+    async def update_data(cls, id: int, **data):
+        async with async_session() as session:
+            stmt = (
+                update(cls.model)
+                .returning(cls.model.__table__.columns)
+                .filter_by(user_id=id)
+                .values(**data)
+            )
+            result = await session.execute(stmt)
+            await session.commit()
+
+            return result.mappings().first()
