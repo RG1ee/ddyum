@@ -1,4 +1,4 @@
-from sqlalchemy import update
+from sqlalchemy import select, update
 
 from src.users.models import Profile, User
 from src.base.services import BaseService
@@ -14,6 +14,26 @@ class UserService(BaseService):
             stmt = update(cls.model).filter_by(id=user_id).values(**data)
             await session.execute(stmt)
             await session.commit()
+
+    @classmethod
+    async def get_user_with_profile(cls, user_id: int):
+        async with async_session() as session:
+            query = (
+                select(
+                    cls.model.email,
+                    Profile.id,
+                    Profile.first_name,
+                    Profile.telegram,
+                    Profile.phone,
+                )
+                .join(
+                    Profile,
+                    cls.model.id == Profile.user_id,
+                )
+                .filter_by(id=user_id)
+            )
+            result = await session.execute(query)
+            return result.mappings().first()
 
 
 class ProfileService(BaseService):
