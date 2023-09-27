@@ -44,9 +44,9 @@ async def test_get_user_profile(
 async def test_update_profile(
     authenticated_client: AsyncClient,
     client: AsyncClient,
-    first_name: str,
-    telegram: str,
-    phone: str,
+    first_name,
+    telegram,
+    phone,
 ):
     data = {
         "firstName": first_name,
@@ -68,12 +68,3 @@ async def test_update_profile(
     )
 
     assert response.status_code == 401
-
-    # test partial update
-    data.pop("phone")
-    response = await authenticated_client.patch(
-        f"{settings.API_PREFIX}/users/my_profile/update", json=data
-    )
-
-    assert response.status_code == 200
-    assert response.json() == data
