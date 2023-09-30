@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING, List
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import Base
+
+if TYPE_CHECKING:
+    from src.bookings.models import Bookings
 
 
 class User(Base):
@@ -17,6 +22,8 @@ class User(Base):
         uselist=False,
         back_populates="user",
     )
+
+    bookings: Mapped[List["Bookings"]] = relationship(back_populates="user")
 
     def __str__(self) -> str:
         return f"{__class__.__name__} {self.email!r}"

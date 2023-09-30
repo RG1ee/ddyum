@@ -1,0 +1,12 @@
+[
+  {
+    "description": "Photo shoot for couples",
+    "id": 1,
+    "name": "Couple"
+  },
+  {
+    "description": "Portrait photography",
+    "id": 2,
+    "name": "Portrait"
+  }
+]

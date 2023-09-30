@@ -14,9 +14,7 @@ class BookingType(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
-    description: Mapped[str]
-
-    booking: Mapped["Bookings"] = relationship(back_populates="booking_type")
+    description: Mapped[str | None]
 
     def __str__(self) -> str:
         return f"{__class__.__name__} {self.name!r}"
