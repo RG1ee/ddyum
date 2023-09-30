@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
 import datetime
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.database.db import Base
+
+if TYPE_CHECKING:
+    from src.users.models import User
 
 
 class BookingType(Base):
@@ -11,6 +15,8 @@ class BookingType(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     description: Mapped[str]
+
+    booking: Mapped["Bookings"] = relationship(back_populates="booking_type")
 
     def __str__(self) -> str:
         return f"{__class__.__name__} {self.name!r}"
@@ -23,10 +29,12 @@ class Bookings(Base):
     __tablename__ = "booking"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    user: Mapped[int] = mapped_column(ForeignKey("user.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     booking_type: Mapped[int] = mapped_column(ForeignKey("booking_type.id"))
     booking_date: Mapped[datetime.date]
     is_active: Mapped[bool] = mapped_column(default=True)
+
+    user: Mapped["User"] = relationship(back_populates="bookings")
 
     def __str__(self) -> str:
         return f"{__class__.__name__} {self.id!r}"
