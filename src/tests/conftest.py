@@ -10,6 +10,7 @@ from src.database.db import Base, engine, async_session
 from src.main import app as fastapi_app
 from src.config.settings import settings
 from src.users.models import Profile, User
+from src.bookings.models import BookingType
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -26,13 +27,16 @@ async def prepare_database():
 
     users = open_mock_json("users")
     profile = open_mock_json("profile")
+    booking_type = open_mock_json("booking_type")
 
     async with async_session() as session:
         add_users = insert(User).values(users)
         add_profile = insert(Profile).values(profile)
+        add_booking_type = insert(BookingType).values(booking_type)
 
         await session.execute(add_users)
         await session.execute(add_profile)
+        await session.execute(add_booking_type)
 
         await session.commit()
 
