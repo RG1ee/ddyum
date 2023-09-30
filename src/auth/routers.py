@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Response, status
 
 from src.auth.schemas import (
-    AuthUserSchema,
+    AuthUserLoginSchema,
     AuthUserRegistrationSchema,
 )
 from src.auth.utils import (
@@ -38,7 +38,11 @@ async def registration_user(payload: AuthUserRegistrationSchema) -> dict:
         email=payload.email,
         hashed_password=hashed_password,
     )
-    await ProfileService.insert_data(user_id=new_user_id)
+    await ProfileService.insert_data(
+        user_id=new_user_id,
+        first_name=payload.first_name,
+        telegram=payload.telegram,
+    )
 
     send_user_verification_email.delay(payload.email)
 
@@ -49,7 +53,7 @@ async def registration_user(payload: AuthUserRegistrationSchema) -> dict:
     path="/login",
     status_code=status.HTTP_200_OK,
 )
-async def login_user(response: Response, payload: AuthUserSchema):
+async def login_user(response: Response, payload: AuthUserLoginSchema):
     user = await authenticate_user(email=payload.email, password=payload.password)
     if not user:
         raise http_exc_400_bad_data
