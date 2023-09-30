@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING
 import datetime
 
 from sqlalchemy import ForeignKey
