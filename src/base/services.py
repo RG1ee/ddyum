@@ -7,6 +7,13 @@ class BaseService:
     model = None
 
     @classmethod
+    async def get_all(cls):
+        async with async_session() as session:
+            query = select(cls.model.__table__.columns)
+            result = await session.execute(query)
+            return result.mappings().all()
+
+    @classmethod
     async def get_one_or_none(cls, **filters):
         async with async_session() as session:
             query = select(cls.model.__table__.columns).filter_by(**filters)
