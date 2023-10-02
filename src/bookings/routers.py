@@ -1,9 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter, status
+from fastapi import APIRouter, Depends, status
 
-from src.bookings.schemas import BaseBookingType
-from src.bookings.services import BookingTypeService
+from src.auth.dependencies import current_user
+from src.bookings.schemas import BaseBookingType, CreateBookingSchema
+from src.bookings.services import BookingTypeService, BookingsService
+from src.users.models import User
+from src.bookings.utils import check_existing_booking_and_booking_type
 
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
@@ -17,3 +20,22 @@ router = APIRouter(prefix="/bookings", tags=["Bookings"])
 async def get_all_booking_types():
     all_booking_types = await BookingTypeService.get_all()
     return all_booking_types
+
+
+@router.post(
+    "/create",
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_booking(
+    payload: CreateBookingSchema,
+    current_user: User = Depends(current_user),
+):
+    await check_existing_booking_and_booking_type(current_user.id, payload.booking_id)
+
+    await BookingsService.insert_data(
+        user_id=current_user.id,
+        booking_type=payload.booking_id,
+        booking_date=payload.booking_date,
+    )
+
+    return dict(message="Successful")
