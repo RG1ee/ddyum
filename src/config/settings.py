@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Literal
 from functools import lru_cache
 
-from pydantic import Field, PostgresDsn
+from pydantic import Field, PostgresDsn, RedisDsn
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -15,10 +15,11 @@ class Settings(BaseSettings):
     POSTGRES_DSN: PostgresDsn = Field(
         default="postgresql+asyncpg://postgres:postgres@127.0.0.1:5432/postgres",
     )
+    CACHE_DSN: RedisDsn = Field(default="redis://127.0.0.1:6379/1")
     TEST_DATABASE: str = Field(
         default=f"sqlite+aiosqlite:///{BASE_DIR}/db.sqlite3",
     )
-    BROKER_URL: str = Field(default="redis://localhost:6379/0")
+    BROKER_DSN: RedisDsn = Field(default="redis://127.0.0.1:6379/0")
     ACCESS_EXPIRE: int = Field(default=10)
     REFRESH_EXPIRE: int = Field(default=10080)
     EMAIL_TOKEN_EXPIRE: int = Field(default=120)

@@ -5,7 +5,7 @@ from src.config.settings import settings
 
 celery = Celery(
     "worker",
-    broker=settings.BROKER_URL,
+    broker=f"{settings.BROKER_DSN}",
 )
 
 celery.autodiscover_tasks(
