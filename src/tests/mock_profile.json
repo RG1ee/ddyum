@@ -2,14 +2,12 @@
   {
     "first_name": "John",
     "id": 1,
-    "phone": "89321231212",
     "telegram": "john",
     "user_id": 1
   },
   {
     "first_name": "Kate",
     "id": 2,
-    "phone": null,
     "telegram": "kate1",
     "user_id": 2
   }

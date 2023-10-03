@@ -39,7 +39,6 @@ class Profile(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     first_name: Mapped[str | None]
     telegram: Mapped[str | None]
-    phone: Mapped[str | None]
 
     user: Mapped["User"] = relationship(back_populates="profile")
 

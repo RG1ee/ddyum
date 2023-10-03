@@ -7,7 +7,6 @@ class UserBaseSchema(BaseConfigSchema):
     id: int
     email: EmailStr
     telegram: str | None
-    phone: str | None
 
 
 class ProfileSchema(BaseConfigSchema):
@@ -15,10 +14,8 @@ class ProfileSchema(BaseConfigSchema):
     email: EmailStr
     first_name: str | None
     telegram: str | None
-    phone: str | None
 
 
 class UpdateProfileSchema(BaseConfigSchema):
     first_name: str | None = None
     telegram: str | None = None
-    phone: str | None = None

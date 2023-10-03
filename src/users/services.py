@@ -24,7 +24,6 @@ class UserService(BaseService):
                     Profile.id,
                     Profile.first_name,
                     Profile.telegram,
-                    Profile.phone,
                 )
                 .join(
                     Profile,
