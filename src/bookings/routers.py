@@ -6,7 +6,7 @@ from src.auth.dependencies import current_user
 from src.bookings.schemas import BaseBookingType, CreateBookingSchema
 from src.bookings.services import BookingTypeService, BookingsService
 from src.users.models import User
-from src.bookings.utils import check_existing_booking_and_booking_type
+from src.bookings.utils import check_existing_booking_and_booking_type, cache
 
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
@@ -17,6 +17,7 @@ router = APIRouter(prefix="/bookings", tags=["Bookings"])
     status_code=status.HTTP_200_OK,
     response_model=List[BaseBookingType],
 )
+@cache(expire=60 * 60)
 async def get_all_booking_types():
     all_booking_types = await BookingTypeService.get_all()
     return all_booking_types

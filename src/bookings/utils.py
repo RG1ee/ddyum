@@ -1,3 +1,6 @@
+from fastapi_cache.decorator import cache
+
+from src.config.settings import settings
 from src.bookings.services import BookingTypeService, BookingsService
 from src.exceptions.http_exceptions import (
     http_exc_409_conflict,
@@ -16,3 +19,16 @@ async def check_existing_booking_and_booking_type(user_id: int, booking_id: int)
     existing_booking_type = await BookingTypeService.get_one_or_none(id=booking_id)
     if not existing_booking_type:
         raise http_exc_404_booking_type_not_found
+
+
+def nocache(*args, **kwargs):
+    def decorator(func):
+        return func
+
+    return decorator
+
+
+if settings.MODE == "TEST":
+    cache = nocache
+else:
+    cache = cache
