@@ -38,4 +38,6 @@ async def create_booking(
         booking_date=payload.booking_date,
     )
 
+    # TODO send email
+
     return dict(message="Successful")
