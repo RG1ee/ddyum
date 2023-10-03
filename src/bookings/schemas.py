@@ -1,4 +1,5 @@
 from datetime import date
+
 from pydantic import Field
 from src.base.schemas import BaseConfigSchema
 
