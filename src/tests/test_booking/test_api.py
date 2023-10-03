@@ -16,6 +16,14 @@ async def test_get_all_booking_types(
     assert len(response.json()) == 2
 
 
+async def test_get_all_booked_types(
+    client: AsyncClient,
+):
+    response = await client.get(f"{settings.API_PREFIX}/bookings/booked_date")
+
+    assert response.status_code == 200
+
+
 @pytest.mark.parametrize(
     "booking_id, booking_date, status_code",
     [

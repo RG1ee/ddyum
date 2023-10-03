@@ -22,6 +22,15 @@ async def get_all_booking_types():
     return all_booking_types
 
 
+@router.get(
+    "/booked_date",
+    status_code=status.HTTP_200_OK,
+)
+async def get_booked_date():
+    all_booked_date = await BookingsService.get_all_booked_date(is_active=True)
+    return all_booked_date
+
+
 @router.post(
     "/create",
     status_code=status.HTTP_201_CREATED,
