@@ -7,6 +7,7 @@ from src.bookings.schemas import BaseBookingType, CreateBookingSchema
 from src.bookings.services import BookingTypeService, BookingsService
 from src.users.models import User
 from src.bookings.utils import check_existing_booking_and_booking_type, cache
+from src.tasks.tasks import send_user_email
 
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
@@ -48,6 +49,6 @@ async def create_booking(
         booking_date=payload.booking_date,
     )
 
-    # TODO send email
+    send_user_email.delay(current_user.email, "booking_email.html")
 
     return dict(message="Successful")

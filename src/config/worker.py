@@ -9,5 +9,5 @@ celery = Celery(
 )
 
 celery.autodiscover_tasks(
-    ["src.auth.tasks"],
+    ["src.tasks"],
 )
