@@ -12,7 +12,7 @@ from src.auth.utils import (
     create_hash_password,
 )
 from src.auth.dependencies import current_user_for_refresh
-from src.auth.tasks.tasks import send_user_verification_email
+from src.tasks.tasks import send_user_email
 from src.users.models import User
 from src.users.services import ProfileService, UserService
 from src.exceptions.http_exceptions import (
@@ -20,6 +20,7 @@ from src.exceptions.http_exceptions import (
     http_exc_400_bad_data,
     http_exc_401_unauthorized,
 )
+from src.base.email_utils import create_url_for_confirm
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -44,7 +45,11 @@ async def registration_user(payload: AuthUserRegistrationSchema) -> dict:
         telegram=payload.telegram,
     )
 
-    send_user_verification_email.delay(payload.email)
+    send_user_email.delay(
+        user_email=payload.email,
+        template_name="email.html",
+        url_for_confirm=create_url_for_confirm(payload.email),
+    )
 
     return dict(email=payload.email)
 

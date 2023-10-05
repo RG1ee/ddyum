@@ -17,14 +17,16 @@ def preparing_for_email(
     subject: str,
     by: str,
     to: str,
+    template_name: str,
+    **kwargs,
 ) -> MIMEMultipart:
     msg = MIMEMultipart("alternative")
     msg["Subject"] = subject
     msg["From"] = by
     msg["To"] = to
     html = render_template(
-        "email.html",
-        url_for_confirm=create_url_for_confirm(to),
+        template_name,
+        **kwargs,
     )
     part = MIMEText(html, "html")
     msg.attach(part)
