@@ -51,35 +51,24 @@ def event_loop():
 
 @pytest.fixture(scope="function")
 async def client():
-    async with AsyncClient(app=fastapi_app, base_url="http://") as client:
+    async with AsyncClient(app=fastapi_app, base_url="http://test") as client:
         yield client
 
 
 @pytest.fixture(scope="function")
 async def authenticated_client():
-    async with AsyncClient(app=fastapi_app, base_url="http://test") as client:
+    async with AsyncClient(app=fastapi_app, base_url="http://test.com") as client:
         data = {
             "email": "test@test.com",
             "password": "testpassword",
         }
-        await client.post(f"{settings.API_PREFIX}/auth/login", json=data)
+        token_response = await client.post(
+            f"{settings.API_PREFIX}/auth/token", json=data
+        )
 
-        assert client.cookies["access_token"]
-        assert client.cookies["refresh_token"]
+        assert token_response.status_code == 200
 
-        yield client
-
-
-@pytest.fixture(scope="function")
-async def not_active_client():
-    async with AsyncClient(app=fastapi_app, base_url="http://test") as client:
-        data = {
-            "email": "testuser@test.com",
-            "password": "testpassword",
-        }
-        await client.post(f"{settings.API_PREFIX}/auth/login", json=data)
-
-        assert client.cookies["access_token"]
-        assert client.cookies["refresh_token"]
+        access_token = token_response.json().get("access")
+        client.headers = {"Authorization": f"Bearer {access_token}"}
 
         yield client

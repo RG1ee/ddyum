@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Any
 
-from fastapi import Response
+from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 
@@ -11,6 +11,7 @@ from src.exceptions.http_exceptions import http_exc_401_unauthorized
 
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/v1/auth/token")
 
 
 def create_hash_password(password: str) -> str:
@@ -53,12 +54,11 @@ async def authenticate_user(email: str, password: str):
     return user
 
 
-async def set_token(response: Response, sub: dict):
+async def return_tokens(sub: dict):
     access_token = create_token(sub, settings.ACCESS_EXPIRE)
     refresh_token = create_token(sub, settings.REFRESH_EXPIRE)
 
-    response.set_cookie("access_token", access_token, httponly=True)
-    response.set_cookie("refresh_token", refresh_token, httponly=True)
+    return dict(access=access_token, refresh=refresh_token, token_type="bearer")
 
 
 async def check_token(payload: dict[str, Any]):
