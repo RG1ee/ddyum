@@ -1,24 +1,23 @@
-from fastapi import APIRouter, Depends, Response, status
+from fastapi import APIRouter, status
 
 from src.auth.schemas import (
     AuthUserLoginSchema,
     AuthUserRegistrationSchema,
+    RefreshTokenSchema,
+    TokensSchema,
 )
 from src.auth.utils import (
     authenticate_user,
     check_token,
     decode_token,
-    set_token,
+    return_tokens,
     create_hash_password,
 )
-from src.auth.dependencies import current_user_for_refresh
 from src.tasks.tasks import send_user_email
-from src.users.models import User
 from src.users.services import ProfileService, UserService
 from src.exceptions.http_exceptions import (
     http_exc_400_bad_email,
     http_exc_400_bad_data,
-    http_exc_401_unauthorized,
 )
 from src.base.email_utils import create_url_for_confirm
 
@@ -55,17 +54,17 @@ async def registration_user(payload: AuthUserRegistrationSchema) -> dict:
 
 
 @router.post(
-    path="/login",
+    path="/token",
     status_code=status.HTTP_200_OK,
+    response_model=TokensSchema,
 )
-async def login_user(response: Response, payload: AuthUserLoginSchema):
+async def login_user(payload: AuthUserLoginSchema):
     user = await authenticate_user(email=payload.email, password=payload.password)
+
     if not user:
         raise http_exc_400_bad_data
 
-    await set_token(response, dict(sub=user.email))
-
-    return dict(message="Successful login")
+    return await return_tokens(dict(sub=user.email))
 
 
 @router.get(
@@ -76,32 +75,19 @@ async def confirm_user_email(access_token: str):
     sub = decode_token(access_token)
     user = await check_token(sub)
 
-    if not user:
-        raise http_exc_401_unauthorized
-
     await UserService.update_user(user_id=user.id, is_active=True)
     return user.email
 
 
 @router.post(
-    path="/refresh",
+    path="/token/refresh",
     status_code=status.HTTP_200_OK,
+    response_model=TokensSchema,
 )
 async def refresh(
-    response: Response,
-    current_user_for_refresh: User = Depends(current_user_for_refresh),
+    payload: RefreshTokenSchema,
 ):
-    await set_token(response, dict(sub=current_user_for_refresh.email))
+    sub = decode_token(payload.refresh_token)
+    user = await check_token(sub)
 
-    return dict(message="Successful refresh")
-
-
-@router.get(
-    path="/logout",
-    status_code=status.HTTP_200_OK,
-)
-async def logout(response: Response) -> dict:
-    response.delete_cookie("access_token")
-    response.delete_cookie("refresh_token")
-
-    return dict(message="Successful logout")
+    return await return_tokens(dict(sub=user.email))

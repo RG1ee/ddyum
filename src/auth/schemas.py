@@ -1,6 +1,20 @@
-from pydantic import Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr
 
 from src.base.schemas import BaseConfigSchema
+
+
+class AccessTokenSchema(BaseModel):
+    access_token: str
+
+
+class RefreshTokenSchema(BaseModel):
+    refresh_token: str
+
+
+class TokensSchema(BaseConfigSchema):
+    access: str
+    refresh: str
+    token_type: str
 
 
 class AuthUserLoginSchema(BaseConfigSchema):
@@ -11,7 +25,3 @@ class AuthUserLoginSchema(BaseConfigSchema):
 class AuthUserRegistrationSchema(AuthUserLoginSchema):
     first_name: str = Field(..., max_length=100)
     telegram: str = Field(..., max_length=50)
-
-
-class AuthUserRefreshSchema(BaseConfigSchema):
-    refresh_token: str
