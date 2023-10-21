@@ -28,3 +28,7 @@ http_exc_409_conflict = HTTPException(
 http_exc_404_booking_type_not_found = HTTPException(
     status_code=status.HTTP_404_NOT_FOUND, detail="Booking Type not found."
 )
+
+http_exc_403_forbidden = HTTPException(
+    status_code=status.HTTP_403_FORBIDDEN, detail="Not enough rights"
+)

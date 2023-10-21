@@ -2,21 +2,25 @@ from typing import List
 
 from fastapi import APIRouter, Depends, status
 
-from src.auth.dependencies import current_user
-from src.bookings.schemas import BaseBookingType, CreateBookingSchema
+from src.auth.dependencies import current_user, current_admin_user
+from src.bookings.schemas import (
+    BaseBookingTypeSchema,
+    CreateBookingSchema,
+    CreateBookingTypeSchema,
+)
 from src.bookings.services import BookingTypeService, BookingsService
 from src.users.models import User
 from src.bookings.utils import check_existing_booking_and_booking_type, cache
 from src.tasks.tasks import send_user_email
 
 
-router = APIRouter(prefix="/bookings", tags=["Bookings"])
+router = APIRouter(prefix="/bookings", tags=["Bookings & Booking Types"])
 
 
 @router.get(
-    "/all_booking_types",
+    "/booking-types",
     status_code=status.HTTP_200_OK,
-    response_model=List[BaseBookingType],
+    response_model=List[BaseBookingTypeSchema],
 )
 @cache(expire=60 * 60)
 async def get_all_booking_types():
@@ -24,8 +28,20 @@ async def get_all_booking_types():
     return all_booking_types
 
 
+@router.post(
+    "/booking-types",
+    status_code=status.HTTP_201_CREATED,
+)
+async def create_booking_type(
+    payload: CreateBookingTypeSchema,
+    current_admin: User = Depends(current_admin_user),
+):
+    await BookingTypeService.insert_data(**payload.model_dump())
+    return dict(message="Successful")
+
+
 @router.get(
-    "/booked_date",
+    "/booked-date",
     status_code=status.HTTP_200_OK,
 )
 async def get_booked_date():
@@ -34,7 +50,7 @@ async def get_booked_date():
 
 
 @router.post(
-    "/create",
+    "/",
     status_code=status.HTTP_201_CREATED,
 )
 async def create_booking(

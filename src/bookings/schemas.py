@@ -4,10 +4,15 @@ from pydantic import Field
 from src.base.schemas import BaseConfigSchema
 
 
-class BaseBookingType(BaseConfigSchema):
+class BaseBookingTypeSchema(BaseConfigSchema):
     id: int
     name: str
     description: str | None = None
+
+
+class CreateBookingTypeSchema(BaseConfigSchema):
+    name: str = Field(...)
+    description: str = Field(...)
 
 
 class CreateBookingSchema(BaseConfigSchema):

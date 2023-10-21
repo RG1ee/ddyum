@@ -72,3 +72,22 @@ async def authenticated_client():
         client.headers = {"Authorization": f"Bearer {access_token}"}
 
         yield client
+
+
+@pytest.fixture(scope="function")
+async def admin_client():
+    async with AsyncClient(app=fastapi_app, base_url="http://test.com") as client:
+        data = {
+            "email": "admin@test.com",
+            "password": "testpassword",
+        }
+        token_response = await client.post(
+            f"{settings.API_PREFIX}/auth/token", json=data
+        )
+
+        assert token_response.status_code == 200
+
+        access_token = token_response.json().get("access")
+        client.headers = {"Authorization": f"Bearer {access_token}"}
+
+        yield client
