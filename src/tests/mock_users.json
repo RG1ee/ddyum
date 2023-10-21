@@ -3,12 +3,18 @@
     "email": "test@test.com",
     "hashed_password": "$2b$12$OVrXauUXvsRsNSeF/gok6OySZ4vMypn.RjNCKei4bKDShyLBYyKfm",
     "is_active": true,
-    "is_admin": true
+    "is_admin": false
   },
   {
     "email": "testuser@test.com",
     "hashed_password": "$2b$12$OVrXauUXvsRsNSeF/gok6OySZ4vMypn.RjNCKei4bKDShyLBYyKfm",
     "is_active": false,
+    "is_admin": true
+  },
+  {
+    "email": "admin@test.com",
+    "hashed_password": "$2b$12$OVrXauUXvsRsNSeF/gok6OySZ4vMypn.RjNCKei4bKDShyLBYyKfm",
+    "is_active": true,
     "is_admin": true
   }
 ]
